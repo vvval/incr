@@ -1,0 +1,236 @@
+openapi: 3.0.0
+info:
+  title: 'API'
+  version: '0.1'
+paths:
+  '/admin/team/{teamId}':
+    put:
+      tags:
+        - admin
+      description: "As a User\n\nI want to be able to add teams\n\nSo that I can manage teams"
+      operationId: 31a9e4339bf1c45ae6e9778df24c2fd6
+      parameters:
+        -
+          name: teamId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 24
+      responses:
+        '200':
+          description: 'Team added'
+        '409':
+          description: 'Team already added'
+    delete:
+      tags:
+        - admin
+      description: "As a User\n\nI want to be able to delete teams\n\nSo that I can manage teams"
+      operationId: 8891b0097f0cee1e0337a3c2291b97a5
+      parameters:
+        -
+          name: teamId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 24
+      responses:
+        '200':
+          description: 'Team deleted'
+  '/admin/team/{teamId}/counters/{userId}':
+    put:
+      tags:
+        - admin
+      description: "As a User\n\nI want to be able to add counters\n\nSo that I can manage team member's counters"
+      operationId: c97a5ae02fcc3032d4e8c82c130f3240
+      parameters:
+        -
+          name: teamId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 24
+        -
+          name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 15
+      responses:
+        '200':
+          description: 'Team counter added'
+        '404':
+          description: 'Team not found'
+    delete:
+      tags:
+        - admin
+      description: "As a User\n\nI want to be able to delete counters\n\nSo that I can manage team member's counters"
+      operationId: 88db6d05b54f6afd9bb1780c45740036
+      parameters:
+        -
+          name: teamId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 24
+        -
+          name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 15
+      responses:
+        '200':
+          description: 'Team counter deleted'
+        '404':
+          description: 'Team not found'
+  /teams:
+    get:
+      tags:
+        - team
+      description: "As a User\n\nI want to list all teams and see their step counts\n\nSo that I can compare my team with the others"
+      operationId: 979843925b7ac6dbc4fe245c17689ad3
+      responses:
+        '200':
+          description: 'All teams with their step counts'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teams'
+  '/team/{teamId}/counters/total':
+    get:
+      tags:
+        - team
+      description: "As a User\n\nI want to get the current total steps taken by a team\n\nSo that I can see how much that team have walked in total"
+      operationId: 8876de22e2334770c19aeb3f4363b15d
+      parameters:
+        -
+          name: teamId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 24
+      responses:
+        '200':
+          description: 'Current total steps taken by a team'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamTotalCounter'
+        '404':
+          description: 'Team not found'
+  '/team/{teamId}/counters':
+    get:
+      tags:
+        - team
+      description: "As a User\n\n want to list all counters in a team\n\nSo that I can see how much each team member have walked"
+      operationId: 2350150991e4f8d4e77d30aed3cc65d4
+      parameters:
+        -
+          name: teamId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 24
+      responses:
+        '200':
+          description: 'All counters in a team'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamCounters'
+        '404':
+          description: 'Team not found'
+  '/team/{teamId}/counters/{userId}':
+    put:
+      tags:
+        - user
+      description: "As a User\n\nI want to be able to create a new counter\n\nSo that steps can be accumulated for a team of one or multiple employees"
+      operationId: 26d6b8113db28710526018ebb8d87269
+      parameters:
+        -
+          name: teamId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 24
+        -
+          name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 15
+      responses:
+        '200':
+          description: 'Team counter added'
+        '404':
+          description: 'Team not found'
+    post:
+      tags:
+        - user
+      description: "As a User\n\nI want to be able to increment the value of a stored counter\n\nSo that I can get steps counted towards my team's score"
+      operationId: e4a5a4593e80f0f77cc2089ca78f8b1b
+      parameters:
+        -
+          name: teamId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 24
+        -
+          name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 15
+      responses:
+        '200':
+          description: 'Team counter incremented'
+        '404':
+          description: 'Team not found'
+components:
+  schemas:
+    TeamCounters:
+      properties:
+        id:
+          type: integer
+          example: 24
+        counters:
+          type: array
+          items:
+            properties:
+              id:
+                type: integer
+                example: 15
+              counter:
+                type: integer
+                example: 116
+            type: object
+      type: object
+    TeamTotalCounter:
+      properties:
+        id:
+          type: integer
+          example: 24
+        total_counter:
+          type: integer
+          example: 996
+      type: object
+    Teams:
+      properties:
+        teams:
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamTotalCounter'
+      type: object
